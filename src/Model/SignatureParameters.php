@@ -34,6 +34,8 @@ final readonly class SignatureParameters
     }
 
     /**
+     * @internal
+     *
      * @return array<string, mixed>
      */
     public function toDssParameters(): array

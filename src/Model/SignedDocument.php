@@ -7,7 +7,7 @@ namespace Authentin\Eusig\Model;
 final readonly class SignedDocument
 {
     public function __construct(
-        public string $bytes,
+        public string $content,
         public string $filename,
     ) {}
 
@@ -19,6 +19,6 @@ final readonly class SignedDocument
             \mkdir($dir, 0o755, true);
         }
 
-        \file_put_contents($path, $this->bytes);
+        \file_put_contents($path, $this->content);
     }
 }

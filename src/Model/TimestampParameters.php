@@ -12,6 +12,8 @@ final readonly class TimestampParameters
     ) {}
 
     /**
+     * @internal
+     *
      * @return array<string, mixed>
      */
     public function toDssParameters(): array
@@ -21,7 +23,7 @@ final readonly class TimestampParameters
         ];
 
         if (null !== $this->containerType) {
-            $params['containerType'] = $this->containerType->value;
+            $params['timestampContainerForm'] = $this->containerType->value;
         }
 
         return $params;
