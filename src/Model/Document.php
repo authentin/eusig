@@ -22,9 +22,9 @@ final readonly class Document
         }
     }
 
-    public function hash(string $algo = 'sha256'): string
+    public function hash(DigestAlgorithm $algorithm = DigestAlgorithm::SHA256): string
     {
-        return \hash($algo, $this->content);
+        return \hash(\strtolower($algorithm->value), $this->content);
     }
 
     public static function fromLocalFile(string $path): self

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Authentin\Eusig\Dss;
 
+use Authentin\Eusig\Exception\DssException;
 use Authentin\Eusig\Model\Document;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
@@ -48,7 +49,7 @@ final readonly class DssClient
             throw new DssException(\sprintf(
                 'DSS returned HTTP %d: %s',
                 $statusCode,
-                $body,
+                \substr($body, 0, 500),
             ));
         }
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Authentin\Eusig\Tests\Unit\Model;
 
 use Authentin\Eusig\Exception\InvalidDocumentException;
+use Authentin\Eusig\Model\DigestAlgorithm;
 use Authentin\Eusig\Model\Document;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -27,7 +28,7 @@ final class DocumentTest extends TestCase
         $doc = new Document('PDF content', 'test.pdf');
 
         self::assertSame(\hash('sha256', 'PDF content'), $doc->hash());
-        self::assertSame(\hash('md5', 'PDF content'), $doc->hash('md5'));
+        self::assertSame(\hash('sha512', 'PDF content'), $doc->hash(DigestAlgorithm::SHA512));
     }
 
     #[Test]

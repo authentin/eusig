@@ -8,6 +8,6 @@ final readonly class SignatureValue
 {
     public function __construct(
         public string $algorithm,
-        public string $value,
+        public string $bytes,
     ) {}
 }

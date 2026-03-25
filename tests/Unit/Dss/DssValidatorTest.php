@@ -27,16 +27,18 @@ final class DssValidatorTest extends TestCase
             self::assertSame('NONE', $body['tokenExtractionStrategy']);
 
             return new Response(200, [], \json_encode([
-                'simpleReport' => [
-                    'signaturesCount' => 1,
-                    'validSignaturesCount' => 1,
+                'SimpleReport' => [
+                    'SignaturesCount' => 1,
+                    'ValidSignaturesCount' => 1,
                     'signatureOrTimestampOrEvidenceRecord' => [
                         [
-                            'indication' => 'TOTAL_PASSED',
-                            'subIndication' => null,
-                            'signatureLevel' => ['value' => 'PAdES_BASELINE_B'],
-                            'signedBy' => 'CN=Test Signer',
-                            'signingTime' => '2026-03-24T18:00:00Z',
+                            'Signature' => [
+                                'Indication' => 'TOTAL_PASSED',
+                                'SubIndication' => null,
+                                'SignatureLevel' => ['value' => 'PAdES_BASELINE_B'],
+                                'SignedBy' => 'CN=Test Signer',
+                                'SigningTime' => '2026-03-24T18:00:00Z',
+                            ],
                         ],
                     ],
                 ],
@@ -59,13 +61,15 @@ final class DssValidatorTest extends TestCase
     public function it_reports_failed_validation(): void
     {
         $validator = $this->createValidator(fn(): Response => new Response(200, [], \json_encode([
-            'simpleReport' => [
-                'signaturesCount' => 1,
-                'validSignaturesCount' => 0,
+            'SimpleReport' => [
+                'SignaturesCount' => 1,
+                'ValidSignaturesCount' => 0,
                 'signatureOrTimestampOrEvidenceRecord' => [
                     [
-                        'indication' => 'TOTAL_FAILED',
-                        'subIndication' => 'SIG_CRYPTO_FAILURE',
+                        'Signature' => [
+                            'Indication' => 'TOTAL_FAILED',
+                            'SubIndication' => 'SIG_CRYPTO_FAILURE',
+                        ],
                     ],
                 ],
             ],
@@ -88,11 +92,15 @@ final class DssValidatorTest extends TestCase
             self::assertCount(1, $body['originalDocuments']);
 
             return new Response(200, [], \json_encode([
-                'simpleReport' => [
-                    'signaturesCount' => 1,
-                    'validSignaturesCount' => 1,
+                'SimpleReport' => [
+                    'SignaturesCount' => 1,
+                    'ValidSignaturesCount' => 1,
                     'signatureOrTimestampOrEvidenceRecord' => [
-                        ['indication' => 'TOTAL_PASSED'],
+                        [
+                            'Signature' => [
+                                'Indication' => 'TOTAL_PASSED',
+                            ],
+                        ],
                     ],
                 ],
             ]));

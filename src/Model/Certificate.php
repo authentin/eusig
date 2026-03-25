@@ -7,6 +7,6 @@ namespace Authentin\Eusig\Model;
 final readonly class Certificate
 {
     public function __construct(
-        public string $encodedCertificate,
+        public string $encoded,
     ) {}
 }

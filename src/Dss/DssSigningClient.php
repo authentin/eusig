@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Authentin\Eusig\Dss;
 
 use Authentin\Eusig\Contract\SigningClientInterface;
+use Authentin\Eusig\Exception\DssException;
 use Authentin\Eusig\Model\Document;
 use Authentin\Eusig\Model\SignatureParameters;
 use Authentin\Eusig\Model\SignatureValue;
@@ -25,7 +26,15 @@ final readonly class DssSigningClient implements SigningClientInterface
             'toSignDocument' => DssClient::documentToPayload($document),
         ]);
 
-        return new ToBeSigned($response['bytes'] ?? throw new DssException('Missing "bytes" in getDataToSign response'));
+        $encodedBytes = $response['bytes'] ?? throw new DssException('Missing "bytes" in getDataToSign response');
+
+        $decoded = \base64_decode($encodedBytes, true);
+
+        if (false === $decoded) {
+            throw new DssException('Invalid base64 in getDataToSign response');
+        }
+
+        return new ToBeSigned($decoded);
     }
 
     public function signDocument(Document $document, SignatureParameters $parameters, SignatureValue $signatureValue): SignedDocument
@@ -34,7 +43,7 @@ final readonly class DssSigningClient implements SigningClientInterface
             'parameters' => $parameters->toDssParameters(),
             'signatureValue' => [
                 'algorithm' => $signatureValue->algorithm,
-                'value' => $signatureValue->value,
+                'value' => \base64_encode($signatureValue->bytes),
             ],
             'toSignDocument' => DssClient::documentToPayload($document),
         ]);

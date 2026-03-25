@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Authentin\Eusig\Dss;
 
 use Authentin\Eusig\Contract\ValidatorInterface;
+use Authentin\Eusig\Exception\DssException;
 use Authentin\Eusig\Model\Document;
 use Authentin\Eusig\Model\SignatureValidation;
 use Authentin\Eusig\Model\ValidationResult;
@@ -67,26 +68,32 @@ final readonly class DssValidator implements ValidatorInterface
      */
     private static function mapValidationResult(array $response): ValidationResult
     {
-        $simpleReport = $response['simpleReport'] ?? [];
-        $signaturesCount = $simpleReport['signaturesCount'] ?? 0;
-        $validSignaturesCount = $simpleReport['validSignaturesCount'] ?? 0;
+        $simpleReport = $response['SimpleReport'] ?? throw new DssException('Missing "SimpleReport" in DSS validation response');
+        $signaturesCount = $simpleReport['SignaturesCount'] ?? 0;
+        $validSignaturesCount = $simpleReport['ValidSignaturesCount'] ?? 0;
 
         $signatures = [];
         foreach ($simpleReport['signatureOrTimestampOrEvidenceRecord'] ?? [] as $entry) {
+            // DSS wraps each entry under a "Signature", "Timestamp", or "EvidenceRecord" key
+            $sig = $entry['Signature'] ?? $entry;
+
             $signingTime = null;
-            if (isset($entry['signingTime'])) {
+
+            if (isset($sig['SigningTime'])) {
                 try {
-                    $signingTime = new \DateTimeImmutable($entry['signingTime']);
+                    $signingTime = new \DateTimeImmutable($sig['SigningTime']);
                 } catch (\Exception) {
                     // ignore unparseable dates
                 }
             }
 
+            $level = $sig['SignatureLevel'] ?? null;
+
             $signatures[] = new SignatureValidation(
-                indication: $entry['indication'] ?? 'INDETERMINATE',
-                subIndication: $entry['subIndication'] ?? null,
-                signatureLevel: isset($entry['signatureLevel']['value']) ? $entry['signatureLevel']['value'] : null,
-                signedBy: $entry['signedBy'] ?? null,
+                indication: $sig['Indication'] ?? 'INDETERMINATE',
+                subIndication: $sig['SubIndication'] ?? null,
+                signatureLevel: \is_array($level) ? ($level['value'] ?? null) : $level,
+                signedBy: $sig['SignedBy'] ?? null,
                 signingTime: $signingTime,
             );
         }

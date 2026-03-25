@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Authentin\Eusig\Dss;
-
-use Authentin\Eusig\Exception\EusigException;
+namespace Authentin\Eusig\Exception;
 
 final class DssException extends \RuntimeException implements EusigException
 {

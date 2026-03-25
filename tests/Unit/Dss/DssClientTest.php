@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Authentin\Eusig\Tests\Unit\Dss;
 
 use Authentin\Eusig\Dss\DssClient;
-use Authentin\Eusig\Dss\DssException;
+use Authentin\Eusig\Exception\DssException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7\Response;
 use PHPUnit\Framework\Attributes\Test;

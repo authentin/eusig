@@ -8,6 +8,10 @@ final readonly class SignatureParameters
 {
     /**
      * @param list<Certificate> $certificateChain
+     *
+     * Note: $signingCertificate is required for signing operations (getDataToSign/signDocument).
+     * The Signer convenience class sets it automatically from the TokenInterface.
+     * It is not needed for extendDocument or timestampDocument.
      */
     public function __construct(
         public SignatureLevel $signatureLevel,
@@ -48,13 +52,13 @@ final readonly class SignatureParameters
 
         if (null !== $this->signingCertificate) {
             $params['signingCertificate'] = [
-                'encodedCertificate' => $this->signingCertificate->encodedCertificate,
+                'encodedCertificate' => $this->signingCertificate->encoded,
             ];
         }
 
         if ([] !== $this->certificateChain) {
             $params['certificateChain'] = \array_map(
-                static fn(Certificate $cert): array => ['encodedCertificate' => $cert->encodedCertificate],
+                static fn(Certificate $cert): array => ['encodedCertificate' => $cert->encoded],
                 $this->certificateChain,
             );
         }

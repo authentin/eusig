@@ -11,6 +11,14 @@ final readonly class SignedDocument
         public string $filename,
     ) {}
 
+    public function toDocument(): Document
+    {
+        return new Document(
+            content: $this->content,
+            filename: $this->filename,
+        );
+    }
+
     public function saveToFile(string $path): void
     {
         $dir = \dirname($path);

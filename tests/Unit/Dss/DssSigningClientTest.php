@@ -48,7 +48,7 @@ final class DssSigningClientTest extends TestCase
         $result = $client->getDataToSign($document, $params);
 
         self::assertInstanceOf(ToBeSigned::class, $result);
-        self::assertSame('dG9CZVNpZ25lZA==', $result->bytes);
+        self::assertSame('toBeSigned', $result->bytes);
     }
 
     #[Test]
@@ -73,7 +73,7 @@ final class DssSigningClientTest extends TestCase
             signingCertificate: new Certificate('Y2VydA=='),
         );
 
-        $result = $client->signDocument($document, $params, new SignatureValue('RSA_SHA256', 'c2lnbmF0dXJl'));
+        $result = $client->signDocument($document, $params, new SignatureValue('RSA_SHA256', 'signature'));
 
         self::assertSame('signed-pdf-bytes', $result->content);
         self::assertSame('test-signed.pdf', $result->filename);
